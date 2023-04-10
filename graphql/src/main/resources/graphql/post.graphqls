@@ -1,0 +1,14 @@
+type Query {
+  getPosts: [Post]
+  getPost(id: ID!): Post
+}
+
+type Post {
+  id: ID!
+  title: String!
+  date: String!
+  summary: String
+  author: String
+  authorRole: String
+  imageSrc: String
+}
