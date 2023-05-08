@@ -3,6 +3,7 @@ package com.news.graphql.service;
 import com.news.graphql.model.Post;
 import com.news.graphql.repository.PostRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 public class PostService {
   private final PostRepository repository;
 
+  @Cacheable("postsCache")
   public List<Post> getPosts() {
     return repository.findAll();
   }
