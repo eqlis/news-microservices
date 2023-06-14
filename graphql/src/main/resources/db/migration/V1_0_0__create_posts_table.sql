@@ -6,4 +6,7 @@ CREATE TABLE posts (
   , author VARCHAR(255)
   , author_role VARCHAR(255)
   , image_src VARCHAR(255)
+  , likes INT NOT NULL DEFAULT 0
+  , dislikes INT NOT NULL DEFAULT 0
+  , CONSTRAINT posts_pk PRIMARY KEY (id)
 );
