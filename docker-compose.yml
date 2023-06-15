@@ -1,0 +1,63 @@
+version: '3.9'
+services:
+  producer:
+    image: 'producer:latest'
+    build:
+      context: /producer
+    container_name: producer
+    depends_on:
+      - rabbitmq
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+  consumer:
+    image: 'consumer:latest'
+    build:
+      context: /consumer
+    container_name: consumer
+    depends_on:
+      - rabbitmq
+      - postgres
+      - graphql
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/news
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+  graphql:
+    image: 'graphql:latest'
+    build:
+      context: /graphql
+    container_name: graphql
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/news
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+  postgres:
+    image: 'postgres:15.3-alpine'
+    container_name: postgres
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_DB=news
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+  rabbitmq:
+    image: 'rabbitmq:management'
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  redis:
+    image: 'redis:7.2-rc-alpine'
+    container_name: redis
+    ports:
+      - "6379:6379"
